@@ -1,0 +1,24 @@
+(function (definition) {
+    // This file will function properly as a <script> tag, or a module
+    // using CommonJS and NodeJS or RequireJS module formats. In
+    // Common/Node/RequireJS, the module exports the mori API and when
+    // executed as a simple <script>, it creates a mori global
+    // instead.
+
+    // Wrapper adapted from:
+    // https://github.com/swannodette/mori/blob/master/support/wrapper.js
+
+    // CommonJS
+    if (typeof exports === "object") {
+        module.exports = definition();
+
+    // RequireJS
+    } else if (typeof define === "function" && define.amd) {
+        define(["c3"], definition);
+
+    // <script>
+    } else {
+        dds = definition();
+    }
+})(function (c3) {
+    return function () {

@@ -1,0 +1,14 @@
+.c3-bar {
+    stroke: black !important ;
+    stroke-opacity: 0.5;
+    stroke-width: 1 !important ;
+}
+
+.bin rect {
+  fill: steelblue;
+  shape-rendering: crispEdges;
+}
+
+.bin text {
+  fill: #fff;
+}

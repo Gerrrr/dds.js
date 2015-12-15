@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<body>
+<link href="css/c3.min.css" rel="stylesheet" type="text/css">
+<script src="http://requirejs.org/docs/release/2.1.15/minified/require.js"></script>
+<script>
+requirejs.config({
+    paths: {
+        "d3": "js/external/d3.v3.min",
+        "c3": "js/external/c3.min",
+        "dds": "js/release/dds",
+    },
+    shim: {
+        "d3": {
+            exports: "d3"
+        },
+        "c3": {
+            deps: ["d3"],
+            exports: "c3"
+        },
+        "dds": {
+            deps: ["c3"],
+            exports: "dds"
+        }
+    }
+});
+
+require(["c3"], function(c3) {
+    require(["dds"], function(dds) {
+        console.log(dds);
+        console.log(c3);
+        var chart = dds.barchart("Hello world",
+                                 ["a", "b", "c"],
+                                 [[3, 2, 1], [5, 6, 4]],
+                                 ["x", "y"]);
+        document.body.appendChild(chart);
+    });
+})
+</script>
+
+</body>
+</html>
