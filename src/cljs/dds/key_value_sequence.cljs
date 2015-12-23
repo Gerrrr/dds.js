@@ -48,14 +48,7 @@
    [_]
    (let [container (du/create-div)
          render-fn #(render-kv container title kvs)
-         observer (js/MutationObserver.
-                   (fn [mutations]
-                     (doseq [mutation mutations]
-                       (when (and (= (.-type mutation) "childList")
-                                  (.-previousSibling mutation))
-                         (this-as this
-                                  (.disconnect this))
-                         (js/setTimeout render-fn 10)))))]
+         observer (du/create-mutation-observer render-fn)]
      (set! (.-onresize js/window) render-fn)
      (set! (.-id container) "hhh")
      (.observe observer js/document #js {"attributes" true

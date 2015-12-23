@@ -60,3 +60,14 @@
 
 (defn create-table []
   (create-element "table"))
+
+
+(defn create-mutation-observer [f]
+  (js/MutationObserver.
+   (fn [mutations]
+     (doseq [mutation mutations]
+       (when (and (= (.-type mutation) "childList")
+                  (.-previousSibling mutation))
+         (this-as this
+                  (.disconnect this))
+         (js/setTimeout f 10))))))

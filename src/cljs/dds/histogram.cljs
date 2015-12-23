@@ -106,14 +106,7 @@
                        :end end})
                     frequencies))
          render-fn #(render-histogram container title bin-maps)
-         observer (js/MutationObserver.
-                   (fn [mutations]
-                     (doseq [mutation mutations]
-                       (when (and (= (.-type mutation) "childList")
-                                  (.-previousSibling mutation))
-                         (this-as this
-                                  (.disconnect this))
-                         (js/setTimeout render-fn 10)))))]
+         observer (du/create-mutation-observer render-fn)]
      (set! (.-onresize js/window) render-fn)
      (.observe observer js/document #js {"attributes" true
                                          "childList" true
