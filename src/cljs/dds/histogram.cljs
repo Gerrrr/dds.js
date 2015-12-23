@@ -1,41 +1,10 @@
 (ns dds.histogram
   (:require
-   [cljs.pprint :refer [pprint]]
    [schema.core :as s :include-macros true]
    [plumbing.core :as p]
+   [dds.c3 :as c3]
    [dds.protocols :as ps]
-   [dds.c3 :as c3]))
-
-(defn get-parent-rect-value [node key]
-  "Copied from https://github.com/masayuki0812/c3/blob/f56e853237ca84c372fd5dcb795491a8ebc6468d/c3.js#L2699"
-  (loop [node node]
-    (if (and node
-             (not= (.-tagName node) "BODY"))
-      (let [v
-            (try
-              (-> (.getBoundingClientRect node)
-                  (aget key))
-              (catch js/Error e
-                  (when (= key "width")
-                    "In IE in certain cases getBoundingClientRect
-                     will cause unspecified error"
-                  (.-offsetWidth node))))]
-        (if v
-          v
-          (recur (.-parentNode node)))))))
-
-(defn get-width [node]
-  (let [default-width 640
-        parent-width (get-parent-rect-value node "width")]
-    (if parent-width
-      parent-width
-      default-width)))
-
-(defn get-height [node]
-  (let [default-height 480
-        parent-height (get-parent-rect-value node "height")]
-    (if parent-height
-      default-height)))
+   [dds.utils :as du]))
 
 (defn get-margins [node]
   {:left-margin 50
@@ -50,8 +19,8 @@
                 (s/required-key :end) s/Num
                 (s/required-key :y) s/Num}]]
   (set! (.-innerHTML container) "")
-  (let [width (get-width container)
-         height (get-height container)
+  (let [width (du/get-width container)
+        height (du/get-height container)
         {:keys [left-margin right-margin
                 top-margin bottom-margin]
          :as m} (get-margins container)
@@ -127,7 +96,7 @@
   ps/Renderable
   (render
    [_]
-   (let [container (.createElement js/document "div")
+   (let [container (du/create-div)
          bin-maps (->>
                    (partition 2 1 bins)
                    (mapv

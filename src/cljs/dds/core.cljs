@@ -25,5 +25,5 @@
   (ps/render (Histogram. title bins frequencies)))
 
 (defn ^:export heatmap
-  [values row-names col-names]
-  (ps/render (Heatmap. values row-names col-names)))
+  [title values row-names col-names color-zeroes]
+  (ps/render (Heatmap. title values row-names col-names color-zeroes)))

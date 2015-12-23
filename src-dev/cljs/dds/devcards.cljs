@@ -74,15 +74,10 @@
 
 
 (defcard "## Heatmap"
-  (let [matrix [[1 2 3] [1 2 1] [4 5 6] [7 2 1]]
-        col-names ["A" "B" "C"]
-        row-names ["1" "2" "3" "4"]
-        chart (dds/heatmap matrix row-names col-names)]
-    chart)
-  #_(dc/dom-node
+  (dc/dom-node
    (fn [data-atom node]
      (let [matrix [[1 2 3] [1 2 1] [4 5 6] [7 2 1]]
            col-names ["A" "B" "C"]
            row-names ["1" "2" "3" "4"]
-           chart (dds/heatmap matrix row-names col-names)]
+           chart (dds/heatmap "title" matrix row-names col-names [0 10])]
        (set-content! node chart)))))
