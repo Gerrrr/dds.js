@@ -37,17 +37,26 @@
           (recur (.-parentNode node)))))))
 
 (defn get-width [node]
-  (let [default-width 640
+  (let [default-width 0
         parent-width (get-parent-rect-value node "width")]
-    (if parent-width
+    (if-not (or (nil? parent-width)
+                (= parent-width 0))
       parent-width
       default-width)))
 
 (defn get-height [node]
-  (let [default-height 480
+  (let [default-height 260
         parent-height (get-parent-rect-value node "height")]
-    (if parent-height
+    (if-not (or (nil? parent-height)
+                (= parent-height 0))
+      parent-height
       default-height)))
 
+(defn create-element [type]
+  (.createElement js/document type))
+
 (defn create-div []
-  (.createElement js/document "div"))
+  (create-element "div"))
+
+(defn create-table []
+  (create-element "table"))

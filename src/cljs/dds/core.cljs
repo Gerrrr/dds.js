@@ -6,7 +6,8 @@
    [dds.piechart :refer [PieChart]]
    [dds.scatterplot :refer [ScatterPlot]]
    [dds.histogram :refer [Histogram]]
-   [dds.heatmap :refer [Heatmap]]))
+   [dds.heatmap :refer [Heatmap]]
+   [dds.key-value-sequence :refer [KeyValueSequence]]))
 
 (defn ^:export barchart
   [title x-domain heights series]
@@ -27,3 +28,7 @@
 (defn ^:export heatmap
   [title values row-names col-names color-zeroes]
   (ps/render (Heatmap. title values row-names col-names color-zeroes)))
+
+(defn ^:export key-value-sequence
+  [title kvs]
+  (ps/render (KeyValueSequence. title kvs)))

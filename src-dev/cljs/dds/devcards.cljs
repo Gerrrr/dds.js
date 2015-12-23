@@ -81,3 +81,10 @@
            row-names ["1" "2" "3" "4"]
            chart (dds/heatmap "title" matrix row-names col-names [0 10])]
        (set-content! node chart)))))
+
+(defcard "## Key Value Sequence"
+  (dc/dom-node
+   (fn [data-atom node]
+     (let [seq [["hello" "world"] ["foo" "bar"] ["a" "b"]]
+           chart (dds/key-value-sequence "title" seq)]
+       (set-content! node chart)))))
