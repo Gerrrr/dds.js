@@ -1,9 +1,7 @@
 (ns dds.key-value-sequence
   (:require
    [schema.core :as s :include-macros true]
-   [plumbing.core :as p]
    [dds.c3 :as c3]
-   [dds.protocols :as ps]
    [dds.utils :as du]))
 
 (defn render [container title kvs]

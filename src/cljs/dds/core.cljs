@@ -1,7 +1,6 @@
 (ns dds.core
   (:require
    [schema.core :as s :include-macros true]
-   [dds.protocols :as ps]
    [dds.utils :as du]
    [dds.barchart :as bar]
    [dds.piechart :as pie]
