@@ -3,16 +3,20 @@
    [schema.core :as s :include-macros true]
    [dds.protocols :as ps]
    [dds.utils :as du]
-   [dds.barchart :refer [BarChart]]
+   [dds.barchart :as bar]
    [dds.piechart :as pie]
    [dds.scatterplot :as splot]
    [dds.histogram :as hist]
    [dds.heatmap :as hmap]
    [dds.key-value-sequence :as kv]))
 
-(defn ^:export barchart
-  [title x-domain heights series]
-  (ps/render (BarChart. title x-domain heights series)))
+(s/defn ^:export ^:always-validate
+  barchart :- js/Element
+  [title :- s/Str
+   x-domain :- [s/Str]
+   heights :- [[s/Num]]
+   series :- [s/Str]]
+  (bar/render title x-domain heights series))
 
 (s/defn ^:export ^:always-validate
   piechart :- js/Element
