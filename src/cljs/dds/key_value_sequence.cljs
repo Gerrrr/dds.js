@@ -6,14 +6,7 @@
    [dds.protocols :as ps]
    [dds.utils :as du]))
 
-(defn get-margins [node]
-  {:left-margin 0
-   :bottom-margin 0
-   :right-margin 0
-   :top-margin 0})
-
-
-(s/defn render-kv [container title kvs]
+(defn render [container title kvs]
   (set! (.-innerHTML container) "")
   (let [kv-lst (mapv
              (fn [[k v]]
@@ -39,20 +32,3 @@
      (.append "td")
      (.text #(.-entry %))
      (.attr "class" #(.-class %)))))
-
-(s/defrecord KeyValueSequence
-    [title :- s/Str
-     kvs :- [[s/Str s/Str]]]
-  ps/Renderable
-  (render
-   [_]
-   (let [container (du/create-div)
-         render-fn #(render-kv container title kvs)
-         observer (du/create-mutation-observer render-fn)]
-     (set! (.-onresize js/window) render-fn)
-     (set! (.-id container) "hhh")
-     (.observe observer js/document #js {"attributes" true
-                                         "childList" true
-                                         "characterData" true
-                                         "subtree" true})
-     container)))

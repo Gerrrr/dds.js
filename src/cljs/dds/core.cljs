@@ -8,7 +8,7 @@
    [dds.scatterplot :refer [ScatterPlot]]
    [dds.histogram :as hist]
    [dds.heatmap :as hmap]
-   [dds.key-value-sequence :refer [KeyValueSequence]]))
+   [dds.key-value-sequence :as kv]))
 
 (defn ^:export barchart
   [title x-domain heights series]
@@ -61,6 +61,12 @@
     (du/on-window-resize! render-fn)
     container))
 
-(defn ^:export key-value-sequence
-  [title kvs]
-  (ps/render (KeyValueSequence. title kvs)))
+(s/defn ^:export ^:always-validate
+  key-value-sequence :- js/Element
+  [title :- s/Str
+   kvs :- [[(s/one s/Str "k") (s/one s/Str "v")]]]
+   (let [container (du/create-div)
+         render-fn #(kv/render container title kvs)]
+     (du/observe-inserted! container render-fn)
+     (du/on-window-resize! render-fn)
+     container))
