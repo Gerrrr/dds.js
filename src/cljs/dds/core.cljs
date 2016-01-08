@@ -5,7 +5,7 @@
    [dds.utils :as du]
    [dds.barchart :refer [BarChart]]
    [dds.piechart :refer [PieChart]]
-   [dds.scatterplot :refer [ScatterPlot]]
+   [dds.scatterplot :as splot]
    [dds.histogram :as hist]
    [dds.heatmap :as hmap]
    [dds.key-value-sequence :as kv]))
@@ -18,9 +18,14 @@
   [title category-counts]
   (ps/render (PieChart. title category-counts)))
 
-(defn ^:export scatterplot
-  [title points x-numeric? y-numeric?]
-  (ps/render (ScatterPlot. title points x-numeric? y-numeric?)))
+(s/defn ^:export ^:always-validate
+  scatterplot :- js/Element
+  [title :- s/Str
+   points :- [[s/Any]]
+   x-numeric? :- s/Bool
+   y-numeric? :- s/Bool]
+  {:pre [(every? #(= (count %) 2) points)]}
+  (splot/render title points x-numeric? y-numeric?))
 
 (s/defn ^:export ^:always-validate
   histogram :- js/Element
