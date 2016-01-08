@@ -71,3 +71,13 @@
          (this-as this
                   (.disconnect this))
          (js/setTimeout f 10))))))
+
+(defn observe-inserted! [container f]
+  (let [observer (create-mutation-observer f)]
+    (.observe observer js/document #js {"attributes" true
+                                        "childList" true
+                                        "characterData" true
+                                        "subtree" true})))
+
+(defn on-window-resize! [f]
+  (set! (.-onresize js/window) f))

@@ -3,18 +3,17 @@
    [schema.core :as s :include-macros true]
    [plumbing.core :as p]
    [dds.c3 :as c3]
-   [dds.protocols :as ps]
    [dds.utils :as du]))
 
-(defn get-margins [node]
+(def margins
   {:left-margin 50
    :bottom-margin 20
    :right-margin 10
    :top-margin 10})
 
-(s/defn ^:always-validate render-histogram
-  [container
-   title
+(s/defn ^:always-validate render
+  [container :- js/Element
+   title :- s/Str
    bin-maps :- [{(s/required-key :start) s/Num
                 (s/required-key :end) s/Num
                 (s/required-key :y) s/Num}]]
@@ -22,8 +21,7 @@
   (let [width (du/get-width container)
         height (du/get-height container)
         {:keys [left-margin right-margin
-                top-margin bottom-margin]
-         :as m} (get-margins container)
+                top-margin bottom-margin]} margins
         width (- width left-margin right-margin)
         height (- height top-margin bottom-margin)
         svg (->
@@ -37,29 +35,34 @@
         x-domain (->
                   (.-scale js/d3)
                   (.linear)
-                  (.range (clj->js [0 width]))
-                  (.domain (clj->js [(apply min (map :start bin-maps))
-                                     (apply max (map :end bin-maps))])))
+                  (.range #js [0 width])
+                  (.domain #js [(apply min (map :start bin-maps))
+                                (apply max (map :end bin-maps))]))
         bins (map
                (fn [{:keys [start end y]
                      :as m}]
-                 (assoc m
-                        :width (- (x-domain end) (x-domain start))
-                        :height (/ y (- end start))))
+                 (let [scaled-start (x-domain start)]
+                   (assoc m
+                          :start scaled-start
+                          :width (- (x-domain end) scaled-start)
+                          :height (/ y (- end start)))))
                bin-maps)
         y-domain (->
                   (.-scale js/d3)
                   (.linear)
-                  (.range (clj->js [height 0]))
-                  (.domain (clj->js [0 (apply max (map :height bins))])))
-        bins (map
-              (fn [bin]
-                (assoc bin
-                       :height (y-domain (p/safe-get bin :height))
-                       :start (x-domain (p/safe-get bin :start)))) bins)]
+                  (.range #js [height 0])
+                  (.domain #js [0 (apply max (map :height bins))]))
+        bins (->>
+              bins
+              (map
+               (fn [{:keys [height]
+                     :as bin}]
+                 (assoc bin
+                        :height (y-domain height))))
+              (clj->js))]
      (->
       (.selectAll svg ".bin")
-      (.data (clj->js bins))
+      (.data  bins)
       (.enter)
       (.append "rect")
       (.attr "fill" "steelblue")
@@ -85,31 +88,3 @@
               (.axis)
               (.scale y-domain)
               (.orient "left"))))))
-
-
-
-
-(s/defrecord Histogram
-  [title :- s/Str
-   bins :- [s/Num]
-   frequencies :- [s/Num]]
-  ps/Renderable
-  (render
-   [_]
-   (let [container (du/create-div)
-         bin-maps (->>
-                   (partition 2 1 bins)
-                   (mapv
-                    (fn [freq [start end]]
-                      {:y freq
-                       :start start
-                       :end end})
-                    frequencies))
-         render-fn #(render-histogram container title bin-maps)
-         observer (du/create-mutation-observer render-fn)]
-     (set! (.-onresize js/window) render-fn)
-     (.observe observer js/document #js {"attributes" true
-                                         "childList" true
-                                         "characterData" true
-                                         "subtree" true})
-     container)))
