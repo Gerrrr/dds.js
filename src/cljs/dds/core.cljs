@@ -4,7 +4,7 @@
    [dds.protocols :as ps]
    [dds.utils :as du]
    [dds.barchart :refer [BarChart]]
-   [dds.piechart :refer [PieChart]]
+   [dds.piechart :as pie]
    [dds.scatterplot :as splot]
    [dds.histogram :as hist]
    [dds.heatmap :as hmap]
@@ -14,9 +14,11 @@
   [title x-domain heights series]
   (ps/render (BarChart. title x-domain heights series)))
 
-(defn ^:export piechart
-  [title category-counts]
-  (ps/render (PieChart. title category-counts)))
+(s/defn ^:export ^:always-validate
+  piechart :- js/Element
+  [title :- s/Str
+   category-counts :- [[(s/one s/Str "category") (s/one s/Num "count")]]]
+  (pie/render title category-counts))
 
 (s/defn ^:export ^:always-validate
   scatterplot :- js/Element
