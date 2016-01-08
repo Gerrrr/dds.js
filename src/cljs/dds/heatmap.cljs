@@ -1,35 +1,38 @@
 (ns dds.heatmap
   (:require
-   [cljs.pprint :refer [pprint]]
    [schema.core :as s :include-macros true]
    [plumbing.core :as p]
-   [dds.protocols :as ps]
    [dds.utils :as du]))
 
-(defn get-margins [node]
+(def margins
   {:left-margin 50
    :bottom-margin 20
    :right-margin 10
    :top-margin 10})
 
-(defn render-heatmap [container values row-names col-names color-zeroes]
+(s/defn ^:always-validate render
+  [container :- js/Element
+   title :- s/Str
+   values :- [[s/Num]]
+   row-names :- [s/Str]
+   col-names :- [s/Str]
+   color-zeroes :- [s/Num]]
   (set! (.-innerHTML container) "")
   (let [{:keys [left-margin right-margin
-                top-margin bottom-margin]
-         :as m} (get-margins container)
+                top-margin bottom-margin]} margins
         width (- (du/get-width container) left-margin right-margin)
         height (- (du/get-height container) top-margin bottom-margin)
         x (->
            (.-scale js/d3)
            (.ordinal)
            (.domain (clj->js col-names))
-           (.rangeBands (clj->js [0 width])))
+           (.rangeBands #js [0 width]))
         y (->
            (.-scale js/d3)
            (.ordinal)
            (.domain (clj->js row-names))
-           (.rangeBands (clj->js [height 0])))
-        z-domain [(first color-zeroes) (last color-zeroes)]
+           (.rangeBands #js [height 0]))
+        z-domain #js [(first color-zeroes) (last color-zeroes)]
         z-scale-string (case (count color-zeroes)
                          2 "YlOrRd"
                          3 "PRGn"
@@ -40,7 +43,7 @@
                             color-zeroes))))
         z (->
            (.scale js/chroma z-scale-string)
-           (.domain (clj->js z-domain)))
+           (.domain z-domain))
         x-axis (->
                 (.-svg js/d3)
                 (.axis)
@@ -59,7 +62,8 @@
                             (fn [j val]
                               {:x j :y i :val val})
                             row)))
-                        (flatten))
+                        (flatten)
+                        (clj->js))
         chart (->
                (.select js/d3 container)
                (.classed "c3" true)
@@ -86,7 +90,7 @@
     (->
      (.append chart "svg:g")
      (.selectAll "matrix-rects")
-     (.data (clj->js indexed-values))
+     (.data indexed-values)
      (.enter)
      (.append "rect")
      (.attr "class" "cell")
@@ -107,23 +111,3 @@
      (.attr "class" "matrix-cell")
      (.append "svg-title")
      (.text #(.-val %)))))
-
-(s/defrecord Heatmap
-    [title :- s/Str
-     values :- [[s/Num]]
-     row-names :- [s/Str]
-     col-names :- [s/Str]
-     color-zeroes :- [s/Num]]
-  ps/Renderable
-  (render
-   [_]
-   (let [container (du/create-div)
-         render-fn #(render-heatmap container values row-names
-                                    col-names color-zeroes)
-         observer (du/create-mutation-observer render-fn)]
-     (set! (.-onresize js/window) render-fn)
-     (.observe observer js/document #js {"attributes" true
-                                         "childList" true
-                                         "characterData" true
-                                         "subtree" true})
-     container)))

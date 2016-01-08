@@ -7,7 +7,7 @@
    [dds.piechart :refer [PieChart]]
    [dds.scatterplot :refer [ScatterPlot]]
    [dds.histogram :as hist]
-   [dds.heatmap :refer [Heatmap]]
+   [dds.heatmap :as hmap]
    [dds.key-value-sequence :refer [KeyValueSequence]]))
 
 (defn ^:export barchart
@@ -45,9 +45,21 @@
     (du/on-window-resize! render-fn)
     container))
 
-(defn ^:export heatmap
-  [title values row-names col-names color-zeroes]
-  (ps/render (Heatmap. title values row-names col-names color-zeroes)))
+(s/defn ^:export ^:always-validate
+  heatmap :- js/Element
+  [title :- s/Str
+   values :- [[s/Num]]
+   row-names :- [s/Str]
+   col-names :- [s/Str]
+   color-zeroes :- [s/Num]]
+  {:pre [(= (count values) (count row-names))
+         (every? #(= (count %) (count col-names)) values)]}
+  (let [container (du/create-div)
+        render-fn #(hmap/render container title values row-names
+                                col-names color-zeroes)]
+    (du/observe-inserted! container render-fn)
+    (du/on-window-resize! render-fn)
+    container))
 
 (defn ^:export key-value-sequence
   [title kvs]
