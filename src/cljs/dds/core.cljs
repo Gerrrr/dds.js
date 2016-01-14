@@ -7,7 +7,8 @@
    [dds.scatterplot :as splot]
    [dds.histogram :as hist]
    [dds.heatmap :as hmap]
-   [dds.key-value-sequence :as kv]))
+   [dds.key-value-sequence :as kv]
+   [dds.graph :as graph]))
 
 (s/defn ^:export ^:always-validate
   barchart :- js/Element
@@ -80,3 +81,26 @@
      (du/observe-inserted! container render-fn)
      (du/on-window-resize! render-fn)
      container))
+
+(s/defn ^:export ^:always-validate
+  graph :- js/Element
+  [title :- s/Str
+   vertices :- [s/Str]
+   edges :- [[(s/one s/Num "source") (s/one s/Num "target") (s/one s/Str "label")]]
+   show-node-labels? :- s/Bool
+   show-edge-labels? :- s/Bool
+   show-directions? :- s/Bool]
+  (let [nodes (map (fn [v] {:label v}) vertices)
+        links (map
+               (fn [[s t l]] {:source s :target t :label l})
+               edges)
+        container (du/create-div)
+        force (->
+               (.-layout js/d3)
+               (.force))
+        render-fn #(graph/render container force title nodes links
+                                 show-node-labels? show-edge-labels?
+                                 show-directions?)]
+    (du/observe-inserted! container render-fn)
+    (du/on-window-resize! render-fn)
+    container))

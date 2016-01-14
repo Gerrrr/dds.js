@@ -71,8 +71,6 @@
      (let [chart (dds/histogram "title" [1 3.25 5.5 7.75 12] [6 1 0 1])]
        (set-content! node chart)))))
 
-
-
 (defcard "## Heatmap"
   (dc/dom-node
    (fn [data-atom node]
@@ -88,3 +86,31 @@
      (let [seq [["hello" "world"] ["foo" "bar"] ["a" "b"]]
            chart (dds/key-value-sequence "title" seq)]
        (set-content! node chart)))))
+
+(defcard "## Graph with node labels, edge labels and directions"
+  (dc/dom-node
+   (fn [data-atom node]
+     (let [graph (dds/graph "title" ["a" "b" "c"]
+                            [[0 2 "a-c"]] true true true)]
+       (set-content! node graph)))))
+
+(defcard "## Graph with node labels and edge labels"
+  (dc/dom-node
+   (fn [data-atom node]
+     (let [graph (dds/graph "title" ["a" "b" "c"]
+                            [[0 2 "a-c"]] true true false)]
+       (set-content! node graph)))))
+
+(defcard "## Graph with node labels"
+  (dc/dom-node
+   (fn [data-atom node]
+     (let [graph (dds/graph "title" ["a" "b" "c"]
+                            [[0 2 "a-c"]] true false false)]
+       (set-content! node graph)))))
+
+(defcard "## Graph without any labels"
+  (dc/dom-node
+   (fn [data-atom node]
+     (let [graph (dds/graph "title" ["a" "b" "c"]
+                            [[0 2 "a-c"]] false false false)]
+       (set-content! node graph)))))

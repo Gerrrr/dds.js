@@ -31,3 +31,20 @@
   border-right: 1px solid #ccc;
   padding-right:10px;
 }
+
+/* graph */
+
+.node {
+  fill: #ccc;
+  stroke: #777;
+  stroke-width: 1px;
+}
+
+.link {
+  stroke: #777;
+  stroke-width: 1px;
+}
+
+.arrowHead {
+  fill: #555;
+}
