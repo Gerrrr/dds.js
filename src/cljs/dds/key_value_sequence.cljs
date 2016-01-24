@@ -1,10 +1,6 @@
-(ns dds.key-value-sequence
-  (:require
-   [schema.core :as s :include-macros true]
-   [dds.c3 :as c3]
-   [dds.utils :as du]))
+(ns dds.key-value-sequence)
 
-(defn render [container title kvs]
+(defn render [container kvs]
   (set! (.-innerHTML container) "")
   (let [kv-lst (mapv
              (fn [[k v]]

@@ -90,19 +90,25 @@
         chart-div (du/create-div)
         render-fn #(hmap/render chart-div values row-names
                                 col-names color-zeroes)]
-    (du/observe-inserted! container render-fn)
+    (du/observe-inserted! chart-div render-fn)
     (du/on-window-resize! render-fn)
+    (.appendChild container title-div)
+    (.appendChild container chart-div)
     container))
 
 (s/defn ^:export ^:always-validate
   key-value-sequence :- js/Element
   [title :- s/Str
    kvs :- [[(s/one s/Str "k") (s/one s/Str "v")]]]
-   (let [container (du/create-div)
-         render-fn #(kv/render container title kvs)]
-     (du/observe-inserted! container render-fn)
-     (du/on-window-resize! render-fn)
-     container))
+  (let [container (du/create-div)
+        chart-div (du/create-div)
+        title-div (du/create-title-div title)
+        render-fn #(kv/render chart-div kvs)]
+    (du/observe-inserted! chart-div render-fn)
+    (du/on-window-resize! render-fn)
+    (.appendChild container title-div)
+    (.appendChild container chart-div)
+    container))
 
 (s/defn ^:export ^:always-validate
   graph :- js/Element
