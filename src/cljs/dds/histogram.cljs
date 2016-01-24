@@ -13,7 +13,6 @@
 
 (s/defn ^:always-validate render
   [container :- js/Element
-   title :- s/Str
    bin-maps :- [{(s/required-key :start) s/Num
                 (s/required-key :end) s/Num
                 (s/required-key :y) s/Num}]]

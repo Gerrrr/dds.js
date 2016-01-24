@@ -59,6 +59,8 @@
               (and (odd? (count bins))
                    (even? (count frequencies))))]}
   (let [container (du/create-div)
+        title-div (du/create-title-div title)
+        chart-div (du/create-div)
         bin-maps (->>
                   (partition 2 1 bins)
                   (mapv
@@ -67,8 +69,10 @@
                       :start start
                       :end end})
                    frequencies))
-        render-fn #(hist/render container title bin-maps)]
-    (du/observe-inserted! container render-fn)
+        render-fn #(hist/render chart-div bin-maps)]
+    (.appendChild container title-div)
+    (.appendChild container chart-div)
+    (du/observe-inserted! chart-div render-fn)
     (du/on-window-resize! render-fn)
     container))
 
