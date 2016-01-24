@@ -28,7 +28,12 @@
   piechart :- js/Element
   [title :- s/Str
    category-counts :- [[(s/one s/Str "category") (s/one s/Num "count")]]]
-  (pie/render title category-counts))
+  (let [container (du/create-div)
+        title-div (du/create-title-div title)
+        chart (pie/render category-counts)]
+    (.appendChild container title-div)
+    (.appendChild container chart)
+    container))
 
 (s/defn ^:export ^:always-validate
   scatterplot :- js/Element

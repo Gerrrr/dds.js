@@ -65,6 +65,10 @@
 (defn create-table []
   (create-element "table"))
 
+(defn create-title-div [text]
+  (let [el (create-div)]
+    (set! (.-innerHTML el) (str "<strong>" text "</strong>"))
+    el))
 
 (defn create-mutation-observer [f]
   (let [MutationObserver (or

@@ -4,8 +4,7 @@
    [dds.c3 :as c3]))
 
 (s/defn render :- js/Element
-  [title :- s/Str
-   category-counts :- [[(s/one s/Str "category") (s/one s/Num "count")]]]
+  [category-counts :- [[(s/one s/Str "category") (s/one s/Num "count")]]]
   (let [m {:data {:columns category-counts
                   :type "pie"}}]
     (c3/generate-element m)))
