@@ -14,7 +14,6 @@
 (s/defn ^:always-validate render
   [container :- js/Element
    force :- js/Object
-   title :- s/Str
    nodes :- [{(s/required-key :label) s/Str}]
    links :- [{(s/required-key :source) s/Num
                (s/required-key :target) s/Num

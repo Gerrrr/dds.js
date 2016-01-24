@@ -114,7 +114,9 @@
   graph :- js/Element
   [title :- s/Str
    vertices :- [s/Str]
-   edges :- [[(s/one s/Num "source") (s/one s/Num "target") (s/one s/Str "label")]]
+   edges :- [[(s/one s/Num "source")
+              (s/one s/Num "target")
+              (s/one s/Str "label")]]
    show-node-labels? :- s/Bool
    show-edge-labels? :- s/Bool
    show-directions? :- s/Bool]
@@ -122,15 +124,19 @@
         links (map
                (fn [[s t l]] {:source s :target t :label l})
                edges)
-        container (du/create-div)
         force (->
                (.-layout js/d3)
                (.force))
-        render-fn #(graph/render container force title nodes links
+        container (du/create-div)
+        chart-div (du/create-div)
+        title-div (du/create-title-div title)
+        render-fn #(graph/render chart-div force nodes links
                                  show-node-labels? show-edge-labels?
                                  show-directions?)]
     (du/observe-inserted! container render-fn)
     (du/on-window-resize! render-fn)
+    (.appendChild container title-div)
+    (.appendChild container chart-div)
     container))
 
 (s/defn ^:export ^:always-validate
