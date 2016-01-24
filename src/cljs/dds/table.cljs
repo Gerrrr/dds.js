@@ -25,11 +25,11 @@
   (.endUpdate data-view))
 
 (defn render
-  [container pager grid title schema content]
-  (set! (.-innerHTML pager) "")
-  (set! (.-innerHTML grid) "")
-  (set! (.-height (.-style grid))
-        (-> (du/get-height container)
+  [pager-div grid-div schema content]
+  (set! (.-innerHTML pager-div) "")
+  (set! (.-innerHTML grid-div) "")
+  (set! (.-height (.-style grid-div))
+        (-> (du/get-height grid-div)
             (str "px")))
 
   (let [table-maps (->> content
@@ -57,8 +57,8 @@
                       column)))
                  (clj->js))
         data-view (js/Slick.Data.DataView.)
-        grid (js/Slick.Grid. grid data-view columns slickgrid-options)
-        pager (js/Slick.Controls.Pager. data-view grid (js/$ pager))
+        grid (js/Slick.Grid. grid-div data-view columns slickgrid-options)
+        pager (js/Slick.Controls.Pager. data-view grid (js/$ pager-div))
         sort-column (first column-keys)
         compare (fn [a b]
                   (let [x (aget a sort-column)

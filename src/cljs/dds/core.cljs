@@ -148,13 +148,15 @@
    content :- [[s/Any]]]
   {:pre [(every? #(= (count %) (count schema)) content)]}
   (let [container (du/create-div)
-        grid (du/create-div)
-        pager (du/create-div)
-        render-fn #(table/render container pager grid title schema content)]
-    (.add (.-classList grid) "grid")
-    (.add (.-classList pager) "pager")
-    (.appendChild container pager)
-    (.appendChild container grid)
+        grid-div (du/create-div)
+        pager-div (du/create-div)
+        title-div (du/create-title-div title)
+        render-fn #(table/render pager-div grid-div schema content)]
+    (.add (.-classList grid-div) "grid")
+    (.add (.-classList pager-div) "pager")
+    (.appendChild container title-div)
+    (.appendChild container pager-div)
+    (.appendChild container grid-div)
     (du/observe-inserted! container render-fn)
     (du/on-window-resize! render-fn)
     container))
