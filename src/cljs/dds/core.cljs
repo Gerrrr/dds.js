@@ -86,7 +86,9 @@
   {:pre [(= (count values) (count row-names))
          (every? #(= (count %) (count col-names)) values)]}
   (let [container (du/create-div)
-        render-fn #(hmap/render container title values row-names
+        title-div (du/create-title-div title)
+        chart-div (du/create-div)
+        render-fn #(hmap/render chart-div values row-names
                                 col-names color-zeroes)]
     (du/observe-inserted! container render-fn)
     (du/on-window-resize! render-fn)

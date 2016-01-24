@@ -12,7 +12,6 @@
 
 (s/defn ^:always-validate render
   [container :- js/Element
-   title :- s/Str
    values :- [[s/Num]]
    row-names :- [s/Str]
    col-names :- [s/Str]
