@@ -17,7 +17,12 @@
    x-domain :- [s/Str]
    heights :- [[s/Num]]
    series :- [s/Str]]
-  (bar/render title x-domain heights series))
+  (let [container (du/create-div)
+        title-div (du/create-title-div title)
+        chart (bar/render x-domain heights series)]
+    (.appendChild container title-div)
+    (.appendChild container chart)
+    container))
 
 (s/defn ^:export ^:always-validate
   piechart :- js/Element
