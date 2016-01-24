@@ -67,6 +67,7 @@
 
 (defn create-title-div [text]
   (let [el (create-div)]
+    (.add (.-classList el) "title")
     (set! (.-innerHTML el) (str "<strong>" text "</strong>"))
     el))
 

@@ -6,6 +6,10 @@ body {
   font: 10px sans-serif;
 }
 
+.title {
+  font: 11px sans-serif;
+}
+
 
 .c3-bar {
     stroke: black !important ;

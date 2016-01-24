@@ -4,7 +4,7 @@
    [dds.utils :as du]
    [dds.barchart :as bar]
    [dds.piechart :as pie]
-   [dds.scatterplot :as splot]
+   [dds.scatterplot :as scatter]
    [dds.histogram :as hist]
    [dds.heatmap :as hmap]
    [dds.key-value-sequence :as kv]
@@ -42,7 +42,12 @@
    x-numeric? :- s/Bool
    y-numeric? :- s/Bool]
   {:pre [(every? #(= (count %) 2) points)]}
-  (splot/render title points x-numeric? y-numeric?))
+  (let [container (du/create-div)
+        title-div (du/create-title-div title)
+        chart (scatter/render title points x-numeric? y-numeric?)]
+    (.appendChild container title-div)
+    (.appendChild container chart)
+    container))
 
 (s/defn ^:export ^:always-validate
   histogram :- js/Element
