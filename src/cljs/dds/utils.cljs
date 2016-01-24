@@ -67,20 +67,26 @@
 
 
 (defn create-mutation-observer [f]
-  (js/MutationObserver.
-   (fn [mutations]
-     (doseq [mutation mutations]
-       (when (and (= (.-type mutation) "childList")
-                  (.-previousSibling mutation))
-         (this-as this
+  (let [MutationObserver (or
+                          js/window.MutationObserver
+                          js/window.WebKitMutationObserver
+                          js/window.MozMutationObserver)]
+    (MutationObserver.
+     (fn [mutations]
+       (doseq [mutation mutations]
+         (let [added-nodes (.-addedNodes mutation)
+               removed-nodes (.-removedNodes mutation)]
+           (when (or (pos? (.-length added-nodes))
+                     (pos? (.-length removed-nodes)))
+             (this-as this
                   (.disconnect this))
-         (js/setTimeout f 10))))))
+             (js/setTimeout f 10))))))))
 
 (defn observe-inserted! [container f]
   (let [observer (create-mutation-observer f)]
-    (.observe observer js/document #js {"attributes" true
+    (.observe observer js/document #js {"attributes" false
                                         "childList" true
-                                        "characterData" true
+                                        "characterData" false
                                         "subtree" true})))
 
 (defn on-window-resize! [f]
