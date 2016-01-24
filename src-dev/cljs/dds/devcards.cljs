@@ -114,3 +114,14 @@
      (let [graph (dds/graph "title" ["a" "b" "c"]
                             [[0 2 "a-c"]] false false false)]
        (set-content! node graph)))))
+
+(defcard "## Table"
+  (dc/dom-node
+   (fn [data-atom node]
+     (let [schema [{"name" "A" "nullable?" true "type" "string"}
+                   {"name" "B" "nullable?" true "type" "string"}]
+           content [["1" "B1"]
+                    ["2" "B2"]
+                    ["3" "B3"]]
+           chart (dds/table "title" schema content)]
+       (set-content! node chart)))))

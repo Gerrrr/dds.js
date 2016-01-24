@@ -8,7 +8,8 @@
    [dds.histogram :as hist]
    [dds.heatmap :as hmap]
    [dds.key-value-sequence :as kv]
-   [dds.graph :as graph]))
+   [dds.graph :as graph]
+   [dds.table :as table]))
 
 (s/defn ^:export ^:always-validate
   barchart :- js/Element
@@ -101,6 +102,26 @@
         render-fn #(graph/render container force title nodes links
                                  show-node-labels? show-edge-labels?
                                  show-directions?)]
+    (du/observe-inserted! container render-fn)
+    (du/on-window-resize! render-fn)
+    container))
+
+(s/defn ^:export ^:always-validate
+  table :- js/Element
+  [title :- s/Str
+   schema :- [{(s/required-key "name") s/Str
+               (s/required-key "nullable?") s/Bool
+               (s/required-key "type") (s/enum "number" "string")}]
+   content :- [[s/Any]]]
+  {:pre [(every? #(= (count %) (count schema)) content)]}
+  (let [container (du/create-div)
+        grid (du/create-div)
+        pager (du/create-div)
+        render-fn #(table/render container pager grid title schema content)]
+    (.add (.-classList grid) "grid")
+    (.add (.-classList pager) "pager")
+    (.appendChild container pager)
+    (.appendChild container grid)
     (du/observe-inserted! container render-fn)
     (du/on-window-resize! render-fn)
     container))

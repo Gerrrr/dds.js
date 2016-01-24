@@ -1,3 +1,12 @@
+body {
+  margin-left:0;
+  margin-right:0;
+  margin-bottom:0;
+  overflow: hidden;
+  font: 10px sans-serif;
+}
+
+
 .c3-bar {
     stroke: black !important ;
     stroke-opacity: 0.5;
@@ -47,4 +56,11 @@
 
 .arrowHead {
   fill: #555;
+}
+
+/* table */
+
+.slick-row:hover {
+    font-weight: bold;
+    color: #069;
 }
