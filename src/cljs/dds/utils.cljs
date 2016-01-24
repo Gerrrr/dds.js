@@ -1,4 +1,5 @@
-(ns dds.utils)
+(ns dds.utils
+  (:require [cljs-uuid-utils.core :as uuid]))
 
 (defn deep-merge-with
   "Like merge-with, but merges maps recursively, appling the given fn
@@ -53,7 +54,10 @@
       default-height)))
 
 (defn create-element [type]
-  (.createElement js/document type))
+  (let [id (uuid/make-random-uuid)
+        el  (.createElement js/document type)]
+    (.setAttribute el "id" (uuid/uuid-string id))
+    el))
 
 (defn create-div []
   (create-element "div"))

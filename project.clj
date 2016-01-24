@@ -10,7 +10,8 @@
                  [org.clojure/clojurescript "1.7.170"]
                  [prismatic/schema "1.0.3"]
                  [prismatic/plumbing "0.5.2"]
-                 [devcards "0.2.1"]]
+                 [devcards "0.2.1"]
+                 [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]]
   :figwheel {:css-dirs ["resources/public/css"]}
   :cljsbuild
   {:builds
