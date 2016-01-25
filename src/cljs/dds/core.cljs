@@ -40,11 +40,16 @@
   [title :- s/Str
    points :- [[s/Any]]
    x-numeric? :- s/Bool
-   y-numeric? :- s/Bool]
-  {:pre [(every? #(= (count %) 2) points)]}
+   y-numeric? :- s/Bool
+   jitter? :- s/Bool]
+  {:pre [(every? #(= (count %) 2) points)
+         ;; jitter is supported only for numeric axis
+         (if jitter?
+           (and x-numeric? y-numeric?)
+           true)]}
   (let [container (du/create-div)
         title-div (du/create-title-div title)
-        chart (scatter/render title points x-numeric? y-numeric?)]
+        chart (scatter/render points x-numeric? y-numeric? jitter?)]
     (.appendChild container title-div)
     (.appendChild container chart)
     container))
