@@ -4,8 +4,8 @@
   (set! (.-innerHTML container) "")
   (let [kv-lst (mapv
              (fn [[k v]]
-               [{:entry k :class "key"}
-                {:entry v :class "value"}])  kvs)
+               [{:entry k :type "key"}
+                {:entry v :type "value"}])  kvs)
         table (->
                (.select js/d3 container)
                (.classed "c3" true)
@@ -25,4 +25,4 @@
      (.enter)
      (.append "td")
      (.text #(.-entry %))
-     (.attr "class" #(.-class %)))))
+     (.attr "class" #(.-type %)))))
