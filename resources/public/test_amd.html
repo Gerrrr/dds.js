@@ -1,16 +1,39 @@
 <!DOCTYPE html>
 <html>
+<head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+
+<link rel="stylesheet" href="/css/external/c3.min.css" type="text/css">
+<link rel="stylesheet" href="/css/external/slickgrid/slick.grid.css" type="text/css"/>
+<link rel="stylesheet" href="/css/external/slickgrid/jquery-ui-1.8.16.custom.css" type="text/css"/>
+<link rel="stylesheet" href="/css/external/slickgrid/slick.pager.css" type="text/css"/>
+<link rel="stylesheet" href="/css/external/slickgrid/examples.css" type="text/css"/>
+<link rel="stylesheet" href="/css/dds.min.css" type="text/css" />
+</head>
 <body>
-<link href="css/c3.min.css" rel="stylesheet" type="text/css">
+
 <script src="http://requirejs.org/docs/release/2.1.15/minified/require.js"></script>
 <script>
 requirejs.config({
     paths: {
+        "jquery": "js/external/jquery-1.7.min",
+        "drag-event": "js/external/slickgrid/jquery.event.drag-2.0.min",
+
         "d3": "js/external/d3.v3.min",
         "c3": "js/external/c3.min",
+
+        "chroma": "js/external/chroma.min",
+
+        "slick-core": "js/external/slickgrid/slick.core.min",
+        "slick-grid": "js/external/slickgrid/slick.grid.min",
+        "slick-dataview": "js/external/slickgrid/slick.dataview.min",
+        "slick-pager": "js/external/slickgrid/slick.pager.min",
+
         "dds": "js/release/dds",
     },
     shim: {
+        "drag-event": ["jquery"],
         "d3": {
             exports: "d3"
         },
@@ -18,8 +41,13 @@ requirejs.config({
             deps: ["d3"],
             exports: "c3"
         },
+        "slick-core": ["drag-event"],
+        "slick-grid": ["slick-core", "drag-event"],
+        "slick-dataview": ["slick-grid"],
+        "slick-pager": ["slick-grid"],
         "dds": {
-            deps: ["c3"],
+            deps: ["c3", "chroma", "slick-core", "slick-grid",
+                   "slick-dataview", "slick-pager"],
             exports: "dds"
         }
     }

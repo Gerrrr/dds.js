@@ -1,0 +1,14 @@
+.node {
+  fill: #ccc;
+  stroke: #777;
+  stroke-width: 1px;
+}
+
+.link {
+  stroke: #777;
+  stroke-width: 1px;
+}
+
+.arrowHead {
+  fill: #555;
+}

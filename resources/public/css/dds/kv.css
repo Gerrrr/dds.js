@@ -1,0 +1,18 @@
+.keyValueTable {
+  display: inline-block;
+}
+
+.keyValueTable td {
+  font: 11px sans-serif;
+  text-align: right;
+  padding: 2px;
+}
+
+.keyValueTable .value {
+  padding-left: 10px;
+}
+
+.keyValueTable .key {
+  border-right: 1px solid #ccc;
+  padding-right:10px;
+}
