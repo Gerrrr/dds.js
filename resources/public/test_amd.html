@@ -53,17 +53,14 @@ requirejs.config({
     }
 });
 
-require(["c3"], function(c3) {
-    require(["dds"], function(dds) {
-        console.log(dds);
-        console.log(c3);
-        var chart = dds.barchart("Hello world",
-                                 ["a", "b", "c"],
-                                 [[3, 2, 1], [5, 6, 4]],
-                                 ["x", "y"]);
-        document.body.appendChild(chart);
-    });
-})
+require(["dds"], function(dds) {
+    var chart = dds.barchart("Hello world",
+                             ["a", "b", "c"],
+                             [[3, 2, 1], [5, 6, 4]],
+                             ["x", "y"]);
+
+    document.body.appendChild(chart);
+});
 </script>
 
 </body>

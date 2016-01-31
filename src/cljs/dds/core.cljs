@@ -11,31 +11,31 @@
    [dds.graph :as graph]
    [dds.table :as table]))
 
-(s/defn ^:export ^:always-validate
+(s/defn ^:always-validate
   barchart :- js/Element
   [title :- s/Str
    x-domain :- [s/Str]
    heights :- [[s/Num]]
    series :- [s/Str]]
-  (let [container (du/create-div)
-        title-div (du/create-title-div title)
-        chart (bar/render x-domain heights series)]
-    (.appendChild container title-div)
-    (.appendChild container chart)
-    container))
+     (let [container (du/create-div)
+           title-div (du/create-title-div title)
+           chart (bar/render x-domain heights series)]
+       (.appendChild container title-div)
+       (.appendChild container chart)
+       container))
 
-(s/defn ^:export ^:always-validate
+(s/defn ^:always-validate
   piechart :- js/Element
   [title :- s/Str
-   category-counts :- [[(s/one s/Str "category") (s/one s/Num "count")]]]
+   category-counts :- [[(s/one s/Str "category")
+                        (s/one s/Num "count")]]]
   (let [container (du/create-div)
         title-div (du/create-title-div title)
         chart (pie/render category-counts)]
     (.appendChild container title-div)
     (.appendChild container chart)
     container))
-
-(s/defn ^:export ^:always-validate
+(s/defn ^:always-validate
   scatterplot :- js/Element
   [title :- s/Str
    points :- [{(s/required-key "x") s/Any
@@ -68,7 +68,7 @@
     (du/on-window-resize! render-fn)
     container))
 
-(s/defn ^:export ^:always-validate
+(s/defn ^:always-validate
   histogram :- js/Element
   [title :- s/Str
    bins :- [s/Num]
@@ -95,7 +95,7 @@
     (du/on-window-resize! render-fn)
     container))
 
-(s/defn ^:export ^:always-validate
+(s/defn ^:always-validate
   heatmap :- js/Element
   [title :- s/Str
    values :- [[s/Num]]
@@ -115,7 +115,7 @@
     (.appendChild container chart-div)
     container))
 
-(s/defn ^:export ^:always-validate
+(s/defn ^:always-validate
   key-value-sequence :- js/Element
   [title :- s/Str
    kvs :- [[(s/one s/Str "k") (s/one s/Str "v")]]]
@@ -129,7 +129,7 @@
     (.appendChild container chart-div)
     container))
 
-(s/defn ^:export ^:always-validate
+(s/defn ^:always-validate
   graph :- js/Element
   [title :- s/Str
    vertices :- [s/Str]
@@ -158,14 +158,13 @@
     (.appendChild container chart-div)
     container))
 
-(s/defn ^:export ^:always-validate
+(s/defn ^:always-validate
   table :- js/Element
   [title :- s/Str
    schema :- [{(s/required-key "name") s/Str
                (s/required-key "nullable?") s/Bool
                (s/required-key "type") (s/enum "number" "string")}]
    content :- [[s/Any]]]
-  {:pre [(every? #(= (count %) (count schema)) content)]}
   (let [container (du/create-div)
         grid-div (du/create-div)
         pager-div (du/create-div)
