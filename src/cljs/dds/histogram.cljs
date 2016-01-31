@@ -2,7 +2,6 @@
   (:require
    [schema.core :as s :include-macros true]
    [plumbing.core :as p]
-   [dds.c3 :as c3]
    [dds.utils :as du]))
 
 (def margins
