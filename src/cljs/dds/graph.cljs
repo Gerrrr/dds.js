@@ -2,7 +2,6 @@
   (:require
    [schema.core :as s :include-macros true]
    [plumbing.core :as p]
-   [dds.c3 :as c3]
    [dds.utils :as du]))
 
 (def margins
@@ -11,7 +10,7 @@
    :right-margin 0
    :top-margin 0})
 
-(s/defn ^:always-validate render
+(s/defn ^:always-validate render-loop
   [container :- js/Element
    force :- js/Object
    nodes :- [{(s/required-key :label) s/Str}]
@@ -133,3 +132,32 @@
              (.attr "y2" #(aget % "target" "y")))))
      (.start force)
      force))
+
+(s/defn ^:always-validate
+  render :- js/Element
+  [title :- s/Str
+   vertices :- [s/Str]
+   edges :- [[(s/one s/Num "source")
+              (s/one s/Num "target")
+              (s/one s/Str "label")]]
+   show-node-labels? :- s/Bool
+   show-edge-labels? :- s/Bool
+   show-directions? :- s/Bool]
+  (let [nodes (map (fn [v] {:label v}) vertices)
+        links (map
+               (fn [[s t l]] {:source s :target t :label l})
+               edges)
+        force (->
+               (.-layout js/d3)
+               (.force))
+        container (du/create-div)
+        chart-div (du/create-div)
+        title-div (du/create-title-div title)
+        render-fn #(render-loop chart-div force nodes links
+                                show-node-labels? show-edge-labels?
+                                show-directions?)]
+    (du/observe-inserted! container render-fn)
+    (du/on-window-resize! render-fn)
+    (.appendChild container title-div)
+    (.appendChild container chart-div)
+    container))

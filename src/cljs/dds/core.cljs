@@ -35,6 +35,7 @@
     (.appendChild container title-div)
     (.appendChild container chart)
     container))
+
 (s/defn ^:always-validate
   scatterplot :- js/Element
   [title :- s/Str
@@ -129,34 +130,7 @@
     (.appendChild container chart-div)
     container))
 
-(s/defn ^:always-validate
-  graph :- js/Element
-  [title :- s/Str
-   vertices :- [s/Str]
-   edges :- [[(s/one s/Num "source")
-              (s/one s/Num "target")
-              (s/one s/Str "label")]]
-   show-node-labels? :- s/Bool
-   show-edge-labels? :- s/Bool
-   show-directions? :- s/Bool]
-  (let [nodes (map (fn [v] {:label v}) vertices)
-        links (map
-               (fn [[s t l]] {:source s :target t :label l})
-               edges)
-        force (->
-               (.-layout js/d3)
-               (.force))
-        container (du/create-div)
-        chart-div (du/create-div)
-        title-div (du/create-title-div title)
-        render-fn #(graph/render chart-div force nodes links
-                                 show-node-labels? show-edge-labels?
-                                 show-directions?)]
-    (du/observe-inserted! container render-fn)
-    (du/on-window-resize! render-fn)
-    (.appendChild container title-div)
-    (.appendChild container chart-div)
-    container))
+(def ^:export graph graph/render)
 
 (s/defn ^:always-validate
   table :- js/Element
