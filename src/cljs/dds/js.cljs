@@ -17,8 +17,8 @@
 (defn ^:export heatmap [& args]
   (apply dds/heatmap (map js->clj args)))
 
-(defn ^:export keyValueSequence [& args]
-  (apply dds/key-value-sequence (map js->clj args)))
+(defn ^:export key_value_sequence [& args]
+  (apply dds/key-value-seq (map js->clj args)))
 
 (defn ^:export graph [& args]
   (apply dds/graph (map js->clj args)))

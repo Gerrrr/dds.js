@@ -7,7 +7,7 @@
    [dds.scatterplot :as scatter]
    [dds.histogram :as hist]
    [dds.heatmap :as hmap]
-   [dds.key-value-sequence :as kv]
+   [dds.key-value-sequence :as kvs]
    [dds.graph :as graph]
    [dds.table :as table]))
 
@@ -116,19 +116,7 @@
     (.appendChild container chart-div)
     container))
 
-(s/defn ^:always-validate
-  key-value-sequence :- js/Element
-  [title :- s/Str
-   kvs :- [[(s/one s/Str "k") (s/one s/Str "v")]]]
-  (let [container (du/create-div)
-        chart-div (du/create-div)
-        title-div (du/create-title-div title)
-        render-fn #(kv/render chart-div kvs)]
-    (du/observe-inserted! chart-div render-fn)
-    (du/on-window-resize! render-fn)
-    (.appendChild container title-div)
-    (.appendChild container chart-div)
-    container))
+(def ^:export key-value-seq kvs/render)
 
 (def ^:export graph graph/render)
 

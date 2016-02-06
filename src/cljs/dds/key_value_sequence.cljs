@@ -1,6 +1,9 @@
-(ns dds.key-value-sequence)
+(ns dds.key-value-sequence
+  (:require
+   [schema.core :as s :include-macros true]
+   [dds.utils :as du]))
 
-(defn render [container kvs]
+(defn render-loop [container kvs]
   (set! (.-innerHTML container) "")
   (let [kv-lst (mapv
              (fn [[k v]]
@@ -26,3 +29,17 @@
      (.append "td")
      (.text #(.-entry %))
      (.attr "class" #(.-type %)))))
+
+(s/defn ^:always-validate
+  render :- js/Element
+  [title :- s/Str
+   kvs :- [[(s/one s/Str "k") (s/one s/Str "v")]]]
+  (let [container (du/create-div)
+        chart-div (du/create-div)
+        title-div (du/create-title-div title)
+        render-fn #(render-loop chart-div kvs)]
+    (du/observe-inserted! chart-div render-fn)
+    (du/on-window-resize! render-fn)
+    (.appendChild container title-div)
+    (.appendChild container chart-div)
+    container))
