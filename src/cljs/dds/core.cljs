@@ -11,18 +11,7 @@
    [dds.graph :as graph]
    [dds.table :as table]))
 
-(s/defn ^:always-validate
-  barchart :- js/Element
-  [title :- s/Str
-   x-domain :- [s/Str]
-   heights :- [[s/Num]]
-   series :- [s/Str]]
-     (let [container (du/create-div)
-           title-div (du/create-title-div title)
-           chart (bar/render x-domain heights series)]
-       (.appendChild container title-div)
-       (.appendChild container chart)
-       container))
+(def ^:export barchart bar/render)
 
 (def ^:export piechart pie/render)
 
