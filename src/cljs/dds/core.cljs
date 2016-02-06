@@ -5,7 +5,7 @@
    [dds.barchart :as bar]
    [dds.piechart :as pie]
    [dds.scatterplot :as scatter]
-   [dds.histogram :as hist]
+   [dds.histogram :as histogram]
    [dds.heatmap :as heatmap]
    [dds.key-value-sequence :as kvs]
    [dds.graph :as graph]
@@ -69,32 +69,7 @@
     (du/on-window-resize! render-fn)
     container))
 
-(s/defn ^:always-validate
-  histogram :- js/Element
-  [title :- s/Str
-   bins :- [s/Num]
-   frequencies :- [s/Num]]
-  {:pre [(or (and (even? (count bins))
-                   (odd? (count frequencies)))
-              (and (odd? (count bins))
-                   (even? (count frequencies))))]}
-  (let [container (du/create-div)
-        title-div (du/create-title-div title)
-        chart-div (du/create-div)
-        bin-maps (->>
-                  (partition 2 1 bins)
-                  (mapv
-                   (fn [freq [start end]]
-                     {:y freq
-                      :start start
-                      :end end})
-                   frequencies))
-        render-fn #(hist/render chart-div bin-maps)]
-    (.appendChild container title-div)
-    (.appendChild container chart-div)
-    (du/observe-inserted! chart-div render-fn)
-    (du/on-window-resize! render-fn)
-    container))
+(def ^:export histogram histogram/render)
 
 (def ^:export heatmap heatmap/render)
 

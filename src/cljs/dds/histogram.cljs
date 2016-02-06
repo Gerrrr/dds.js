@@ -10,7 +10,7 @@
    :right-margin 10
    :top-margin 10})
 
-(s/defn ^:always-validate render
+(s/defn ^:always-validate render-loop
   [container :- js/Element
    bin-maps :- [{(s/required-key :start) s/Num
                 (s/required-key :end) s/Num
@@ -86,3 +86,30 @@
               (.axis)
               (.scale y-domain)
               (.orient "left"))))))
+
+(s/defn ^:always-validate
+  render :- js/Element
+  [title :- s/Str
+   bins :- [s/Num]
+   frequencies :- [s/Num]]
+  {:pre [(or (and (even? (count bins))
+                   (odd? (count frequencies)))
+              (and (odd? (count bins))
+                   (even? (count frequencies))))]}
+  (let [container (du/create-div)
+        title-div (du/create-title-div title)
+        chart-div (du/create-div)
+        bin-maps (->>
+                  (partition 2 1 bins)
+                  (mapv
+                   (fn [freq [start end]]
+                     {:y freq
+                      :start start
+                      :end end})
+                   frequencies))
+        render-fn #(render-loop chart-div bin-maps)]
+    (.appendChild container title-div)
+    (.appendChild container chart-div)
+    (du/observe-inserted! chart-div render-fn)
+    (du/on-window-resize! render-fn)
+    container))
