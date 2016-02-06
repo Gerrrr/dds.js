@@ -42,7 +42,7 @@
    :right-margin 10
    :top-margin 10})
 
-(s/defn render :- js/Element
+(s/defn render-loop :- js/Element
   [container :- js/Element
    points :- [[s/Any]]
    x-numeric? :- s/Bool
@@ -101,3 +101,36 @@
      (.attr "cx" (partial axis-value jitter? x-numeric? xf #(.-x %)))
      (.attr "cy" (partial axis-value jitter? y-numeric? yf #(.-y %)))
      (.attr "r" 3))))
+
+(s/defn ^:always-validate
+  render :- js/Element
+  [title :- s/Str
+   points :- [{(s/required-key "x") s/Any
+               (s/required-key "y") s/Any}]
+   x-numeric? :- s/Bool
+   y-numeric? :- s/Bool
+   jitter? :- s/Bool]
+  {:pre [(every? #(= (count %) 2) points)
+         ;; jitter is supported only for categorical axis
+         (if jitter?
+           (not (and x-numeric? y-numeric?))
+           true)]}
+  (let [js-points (clj->js points)
+        xs (map #(.-x %) js-points)
+        xf (if x-numeric?
+             (numerical-axis-f xs 0.01)
+             (categorical-axis-f xs))
+        ys (map #(.-y %) js-points)
+        yf (if y-numeric?
+             (numerical-axis-f ys 0.02)
+             (categorical-axis-f ys))
+        container (du/create-div)
+        title-div (du/create-title-div title)
+        chart-div (du/create-div)
+        render-fn #(render-loop chart-div js-points x-numeric? y-numeric?
+                                jitter? xf yf)]
+    (.appendChild container title-div)
+    (.appendChild container chart-div)
+    (du/observe-inserted! chart-div render-fn)
+    (du/on-window-resize! render-fn)
+    container))

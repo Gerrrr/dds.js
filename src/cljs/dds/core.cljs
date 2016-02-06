@@ -36,38 +36,7 @@
     (.appendChild container chart)
     container))
 
-(s/defn ^:always-validate
-  scatterplot :- js/Element
-  [title :- s/Str
-   points :- [{(s/required-key "x") s/Any
-               (s/required-key "y") s/Any}]
-   x-numeric? :- s/Bool
-   y-numeric? :- s/Bool
-   jitter? :- s/Bool]
-  {:pre [(every? #(= (count %) 2) points)
-         ;; jitter is supported only for categorical axis
-         (if jitter?
-           (not (and x-numeric? y-numeric?))
-           true)]}
-  (let [js-points (clj->js points)
-        xs (map #(.-x %) js-points)
-        xf (if x-numeric?
-             (scatter/numerical-axis-f xs 0.01)
-             (scatter/categorical-axis-f xs))
-        ys (map #(.-y %) js-points)
-        yf (if y-numeric?
-             (scatter/numerical-axis-f ys 0.02)
-             (scatter/categorical-axis-f ys))
-        container (du/create-div)
-        title-div (du/create-title-div title)
-        chart-div (du/create-div)
-        render-fn #(scatter/render chart-div js-points x-numeric? y-numeric?
-                                   jitter? xf yf)]
-    (.appendChild container title-div)
-    (.appendChild container chart-div)
-    (du/observe-inserted! chart-div render-fn)
-    (du/on-window-resize! render-fn)
-    container))
+(def ^:export scatterplot scatter/render)
 
 (def ^:export histogram histogram/render)
 
