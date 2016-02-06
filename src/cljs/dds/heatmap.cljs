@@ -10,7 +10,7 @@
    :right-margin 10
    :top-margin 10})
 
-(s/defn ^:always-validate render
+(s/defn ^:always-validate render-loop
   [container :- js/Element
    values :- [[s/Num]]
    row-names :- [s/Str]
@@ -110,3 +110,23 @@
      (.attr "class" "matrix-cell")
      (.append "svg-title")
      (.text #(.-val %)))))
+
+(s/defn ^:always-validate
+  render :- js/Element
+  [title :- s/Str
+   values :- [[s/Num]]
+   row-names :- [s/Str]
+   col-names :- [s/Str]
+   color-zeroes :- [s/Num]]
+  {:pre [(= (count values) (count row-names))
+         (every? #(= (count %) (count col-names)) values)]}
+  (let [container (du/create-div)
+        title-div (du/create-title-div title)
+        chart-div (du/create-div)
+        render-fn #(render-loop chart-div values row-names
+                                col-names color-zeroes)]
+    (du/observe-inserted! chart-div render-fn)
+    (du/on-window-resize! render-fn)
+    (.appendChild container title-div)
+    (.appendChild container chart-div)
+    container))
