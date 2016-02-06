@@ -24,7 +24,7 @@
   (.setItems data-view data)
   (.endUpdate data-view))
 
-(defn render
+(defn render-loop
   [pager-div grid-div schema content]
   (set! (.-innerHTML pager-div) "")
   (set! (.-innerHTML grid-div) "")
@@ -90,3 +90,24 @@
              (.sort data-view compare (.-sortAsc args))))))
 
     (update-grid data-view table-maps)))
+
+(s/defn ^:always-validate
+  render :- js/Element
+  [title :- s/Str
+   schema :- [{(s/required-key "name") s/Str
+               (s/required-key "nullable?") s/Bool
+               (s/required-key "type") (s/enum "number" "string")}]
+   content :- [[s/Any]]]
+  (let [container (du/create-div)
+        grid-div (du/create-div)
+        pager-div (du/create-div)
+        title-div (du/create-title-div title)
+        render-fn #(render-loop pager-div grid-div schema content)]
+    (.add (.-classList grid-div) "grid")
+    (.add (.-classList pager-div) "pager")
+    (.appendChild container title-div)
+    (.appendChild container pager-div)
+    (.appendChild container grid-div)
+    (du/observe-inserted! container render-fn)
+    (du/on-window-resize! render-fn)
+    container))

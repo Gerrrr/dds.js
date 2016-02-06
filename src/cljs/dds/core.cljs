@@ -120,23 +120,4 @@
 
 (def ^:export graph graph/render)
 
-(s/defn ^:always-validate
-  table :- js/Element
-  [title :- s/Str
-   schema :- [{(s/required-key "name") s/Str
-               (s/required-key "nullable?") s/Bool
-               (s/required-key "type") (s/enum "number" "string")}]
-   content :- [[s/Any]]]
-  (let [container (du/create-div)
-        grid-div (du/create-div)
-        pager-div (du/create-div)
-        title-div (du/create-title-div title)
-        render-fn #(table/render pager-div grid-div schema content)]
-    (.add (.-classList grid-div) "grid")
-    (.add (.-classList pager-div) "pager")
-    (.appendChild container title-div)
-    (.appendChild container pager-div)
-    (.appendChild container grid-div)
-    (du/observe-inserted! container render-fn)
-    (du/on-window-resize! render-fn)
-    container))
+(def ^:export table table/render)
