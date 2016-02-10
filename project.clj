@@ -33,7 +33,9 @@
                 :pretty-print false
                 :whitespace false
                 :optimizations :advanced
-                :externs ["resources/externs/c3.js"]}
+                :externs ["resources/externs/d3.js"
+                          "resources/externs/c3.js"
+                          "resources/externs/slick.grid.externs.js"]}
      :notify-command ["scripts/build.sh"]}]}
   :minify-assets
   {:assets {"resources/public/css/dds.min.css" "resources/public/css/dds"}})
