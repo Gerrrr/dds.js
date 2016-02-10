@@ -94,22 +94,22 @@
      (.append "rect")
      (.attr "class" "cell")
      (.attr "x" #(->>
-                  (.-x %)
+                  (aget % "x")
                   (p/safe-get col-names)
                   (x)
                   (inc)))
      (.attr "y" #(->>
-                  (.-y %)
+                  (aget % "y")
                   (p/safe-get row-names)
                   (y)))
      (.attr "width" (dec (.rangeBand x)))
      (.attr "height" (dec (.rangeBand y)))
-     (.attr "fill" #(if-let [val (.-val %)]
+     (.attr "fill" #(if-let [val (aget % "val")]
                       (z val)
                       "#000000"))
      (.attr "class" "matrix-cell")
      (.append "svg-title")
-     (.text #(.-val %)))))
+     (.text #(aget % "val")))))
 
 (s/defn ^:always-validate
   render :- js/Element
