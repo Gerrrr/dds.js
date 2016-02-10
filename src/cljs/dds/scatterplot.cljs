@@ -105,8 +105,8 @@
 (s/defn ^:always-validate
   render :- js/Element
   [title :- s/Str
-   points :- [{(s/required-key "x") s/Any
-               (s/required-key "y") s/Any}]
+   points :- [{(s/required-key :x) s/Any
+               (s/required-key :y) s/Any}]
    x-numeric? :- s/Bool
    y-numeric? :- s/Bool
    jitter? :- s/Bool]
