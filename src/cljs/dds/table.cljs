@@ -4,12 +4,22 @@
    [plumbing.core :as p]
    [dds.utils :as du]))
 
+
+
+(def numeric-types #{"integer" "double" "float" "byte" "short" "long" "decimal"
+                     "date" "timestamp"})
+(def valid-types (into #{"string" "boolean"} numeric-types))
+
+
+
 (defn- dimension-name [type-map]
   (str
-   (p/safe-get type-map "name")
+   (p/safe-get type-map :name)
    " ["
-   (p/safe-get type-map "type")
-   (if (p/safe-get type-map "nullable?")
+   (if (contains? numeric-types (p/safe-get type-map :type))
+     "numeric"
+     "string")
+   (if (p/safe-get type-map :nullable)
      "*"
      "")
    "]"))
