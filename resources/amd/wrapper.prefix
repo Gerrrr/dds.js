@@ -14,11 +14,11 @@
 
     // RequireJS
     } else if (typeof define === "function" && define.amd) {
-        define(["c3"], definition);
+        define(["c3", "chroma"], definition);
 
     // <script>
     } else {
         dds = definition();
     }
-})(function (c3) {
+})(function (c3, chroma) {
     return function () {
