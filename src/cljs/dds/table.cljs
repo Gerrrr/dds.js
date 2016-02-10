@@ -94,9 +94,9 @@
 (s/defn ^:always-validate
   render :- js/Element
   [title :- s/Str
-   schema :- [{(s/required-key "name") s/Str
-               (s/required-key "nullable?") s/Bool
-               (s/required-key "type") (s/enum "number" "string")}]
+   schema :- [{(s/required-key :name) s/Str
+               (s/required-key :nullable) s/Bool
+               (s/required-key :type) (apply s/enum valid-types)}]
    content :- [[s/Any]]]
   (let [container (du/create-div)
         grid-div (du/create-div)

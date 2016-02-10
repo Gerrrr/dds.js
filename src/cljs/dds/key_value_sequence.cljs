@@ -6,9 +6,9 @@
 (defn render-loop [container kvs]
   (set! (.-innerHTML container) "")
   (let [kv-lst (mapv
-             (fn [[k v]]
-               [{:entry k :type "key"}
-                {:entry v :type "value"}])  kvs)
+             (fn [{:keys [key val]}]
+               [{:entry key :type "key"}
+                {:entry val :type "value"}]) kvs)
         table (->
                (.select js/d3 container)
                (.classed "c3" true)
@@ -27,13 +27,14 @@
      (.data identity)
      (.enter)
      (.append "td")
-     (.text #(.-entry %))
-     (.attr "class" #(.-type %)))))
+     (.text #(aget % "entry"))
+     (.attr "class" #(aget % "type")))))
 
 (s/defn ^:always-validate
   render :- js/Element
   [title :- s/Str
-   kvs :- [[(s/one s/Str "k") (s/one s/Str "v")]]]
+   kvs :- [{(s/required-key :key) s/Any
+            (s/required-key :val) s/Any}]]
   (let [container (du/create-div)
         chart-div (du/create-div)
         title-div (du/create-title-div title)
