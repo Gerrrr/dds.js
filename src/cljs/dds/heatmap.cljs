@@ -121,12 +121,9 @@
   {:pre [(= (count values) (count row-names))
          (every? #(= (count %) (count col-names)) values)]}
   (let [container (du/create-div)
-        title-div (du/create-title-div title)
-        chart-div (du/create-div)
-        render-fn #(render-loop chart-div values row-names
+        chart (du/create-div)
+        render-fn #(render-loop chart values row-names
                                 col-names color-zeroes)]
-    (du/observe-inserted! chart-div render-fn)
+    (du/observe-inserted! chart render-fn)
     (du/on-window-resize! render-fn)
-    (.appendChild container title-div)
-    (.appendChild container chart-div)
-    container))
+    (du/wrap-with-title chart title)))

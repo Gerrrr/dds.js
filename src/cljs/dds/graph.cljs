@@ -150,14 +150,10 @@
         force (->
                (.-layout js/d3)
                (.force))
-        container (du/create-div)
-        chart-div (du/create-div)
-        title-div (du/create-title-div title)
-        render-fn #(render-loop chart-div force nodes links
+        chart (du/create-div)
+        render-fn #(render-loop chart force nodes links
                                 show-node-labels? show-edge-labels?
                                 show-directions?)]
-    (du/observe-inserted! container render-fn)
+    (du/observe-inserted! chart render-fn)
     (du/on-window-resize! render-fn)
-    (.appendChild container title-div)
-    (.appendChild container chart-div)
-    container))
+    (du/wrap-with-title chart title)))

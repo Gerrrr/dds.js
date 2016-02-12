@@ -53,6 +53,13 @@
     (set! (.-innerHTML el) (str "<strong>" text "</strong>"))
     el))
 
+(defn wrap-with-title [div title]
+  (let [container (create-div)
+        title-div (create-title-div title)]
+    (.appendChild container title-div)
+    (.appendChild container div)
+    container))
+
 (defn create-mutation-observer [f]
   (let [MutationObserver (or
                           js/window.MutationObserver

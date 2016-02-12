@@ -35,12 +35,8 @@
   [title :- s/Str
    kvs :- [{(s/required-key :key) s/Any
             (s/required-key :val) s/Any}]]
-  (let [container (du/create-div)
-        chart-div (du/create-div)
-        title-div (du/create-title-div title)
-        render-fn #(render-loop chart-div kvs)]
-    (du/observe-inserted! chart-div render-fn)
+  (let [chart (du/create-div)
+        render-fn #(render-loop chart kvs)]
+    (du/observe-inserted! chart render-fn)
     (du/on-window-resize! render-fn)
-    (.appendChild container title-div)
-    (.appendChild container chart-div)
-    container))
+    (du/wrap-with-title chart title)))

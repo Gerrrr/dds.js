@@ -9,11 +9,7 @@
   [title :- s/Str
    category-counts :- [[(s/one s/Str "category")
                         (s/one s/Num "count")]]]
-  (let [container (du/create-div)
-        title-div (du/create-title-div title)
-        m {:data {:columns category-counts
+  (let [m {:data {:columns category-counts
                   :type "pie"}}
         chart (c3/generate-element m)]
-    (.appendChild container title-div)
-    (.appendChild container chart)
-    container))
+    (du/wrap-with-title chart title)))

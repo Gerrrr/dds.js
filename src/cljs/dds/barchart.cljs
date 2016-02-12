@@ -10,14 +10,10 @@
    x-domain :- [s/Str]
    heights :- [[s/Num]]
    series :- [s/Str]]
-     (let [container (du/create-div)
-           title-div (du/create-title-div title)
-           columns (mapv #(into [%1] %2) series heights)
+     (let [columns (mapv #(into [%1] %2) series heights)
            m {:data {:columns columns
                      :type "bar"}
               :axis {:x {:type "category"
                          :categories x-domain}}}
            chart (c3/generate-element m)]
-       (.appendChild container title-div)
-       (.appendChild container chart)
-       container))
+       (du/wrap-with-title chart title)))

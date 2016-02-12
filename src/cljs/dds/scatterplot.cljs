@@ -124,13 +124,9 @@
         yf (if y-numeric?
              (numerical-axis-f ys 0.02)
              (categorical-axis-f ys))
-        container (du/create-div)
-        title-div (du/create-title-div title)
-        chart-div (du/create-div)
-        render-fn #(render-loop chart-div js-points x-numeric? y-numeric?
+        chart (du/create-div)
+        render-fn #(render-loop chart js-points x-numeric? y-numeric?
                                 jitter? xf yf)]
-    (.appendChild container title-div)
-    (.appendChild container chart-div)
-    (du/observe-inserted! chart-div render-fn)
+    (du/observe-inserted! chart render-fn)
     (du/on-window-resize! render-fn)
-    container))
+    (du/wrap-with-title chart title)))

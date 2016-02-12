@@ -109,15 +109,13 @@
                (s/required-key :type) (apply s/enum valid-types)}]
    content :- [[s/Any]]]
   (let [container (du/create-div)
-        grid-div (du/create-div)
-        pager-div (du/create-div)
-        title-div (du/create-title-div title)
-        render-fn #(render-loop pager-div grid-div schema content)]
-    (.add (.-classList grid-div) "grid")
-    (.add (.-classList pager-div) "pager")
-    (.appendChild container title-div)
-    (.appendChild container pager-div)
-    (.appendChild container grid-div)
+        grid (du/create-div)
+        pager (du/create-div)
+        render-fn #(render-loop pager grid schema content)]
+    (.add (.-classList grid) "grid")
+    (.add (.-classList pager) "pager")
+    (.appendChild container pager)
+    (.appendChild container grid)
     (du/observe-inserted! container render-fn)
     (du/on-window-resize! render-fn)
-    container))
+    (du/wrap-with-title container title)))
