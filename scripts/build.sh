@@ -7,6 +7,6 @@ echo "Finalizing dds.js"
 
 (cat resources/amd/wrapper.prefix;
  cat resources/public/js/release/dds.intermediate.js;
- cat resources/amd/wrapper.suffix) > resources/public/js/release/dds.js
+ cat resources/amd/wrapper.suffix) > resources/public/js/release/dds.min.js
 
 echo "Build finished."
