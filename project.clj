@@ -7,14 +7,15 @@
                  [org.clojure/clojurescript "1.7.170"]
                  [prismatic/schema "1.0.4"]
                  [prismatic/plumbing "0.5.2"]
-                 [devcards "0.2.1"]
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]]
   :figwheel {:css-dirs ["resources/public/css"]}
   :profiles
-  {:dev {:plugins [[lein-ancient "0.6.8"]
+  {:dev {:dependencies [[devcards "0.2.1"]]
+         :plugins [[lein-ancient "0.6.8"]
                    [lein-cljsbuild "1.1.1"]
                    [lein-figwheel "0.5.0-1"]
-                   [lein-asset-minifier "0.2.4"]]}}
+                   [lein-asset-minifier "0.2.4"]]
+         :source-paths ["src/cljs/" "src-dev/cljs"]}}
   :cljsbuild
   {:builds
    [{:id "dev"
