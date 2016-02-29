@@ -6,6 +6,10 @@ body {
   font: 10px sans-serif;
 }
 
-.title {
+.dds-title {
   font: 11px sans-serif;
+}
+
+.dds-content {
+    height: 100%;
 }

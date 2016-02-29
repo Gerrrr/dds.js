@@ -1,39 +1,27 @@
 (ns dds.utils
   (:require [cljs-uuid-utils.core :as uuid]))
 
-(defn get-parent-rect-value [node key]
+(defn get-parent-rect-value [el key]
   "Copied from https://github.com/masayuki0812/c3/blob/f56e853237ca84c372fd5dcb795491a8ebc6468d/c3.js#L2699"
-  (loop [node node]
-    (if (and node
-             (not= (.-tagName node) "BODY"))
-      (let [v
-            (try
-              (-> (.getBoundingClientRect node)
-                  (aget key))
-              (catch js/Error e
-                  (when (= key "width")
-                    "In IE in certain cases getBoundingClientRect
+  (loop [node el]
+    (let [v
+          (try
+            (-> (.getBoundingClientRect node)
+                (aget key))
+            (catch js/Error e
+              (when (= key "width")
+                "In IE in certain cases getBoundingClientRect
                      will cause unspecified error"
-                  (.-offsetWidth node))))]
-        (if v
-          v
-          (recur (.-parentNode node)))))))
+                (.-offsetWidth node))))]
+      (if (and (not (nil? v)) (> v 0))
+        v
+        (recur (.-parentNode node))))))
 
 (defn get-width [node]
-  (let [default-width 0
-        parent-width (get-parent-rect-value node "width")]
-    (if-not (or (nil? parent-width)
-                (= parent-width 0))
-      parent-width
-      default-width)))
+  (get-parent-rect-value node "width"))
 
 (defn get-height [node]
-  (let [default-height 260
-        parent-height (get-parent-rect-value node "height")]
-    (if-not (or (nil? parent-height)
-                (= parent-height 0))
-      parent-height
-      default-height)))
+  (max (get-parent-rect-value node "height") 320))
 
 (defn create-element [type]
   (let [id (uuid/make-random-uuid)
@@ -49,13 +37,14 @@
 
 (defn create-title-div [text]
   (let [el (create-div)]
-    (.add (.-classList el) "title")
+    (.add (.-classList el) "dds-title")
     (set! (.-innerHTML el) (str "<strong>" text "</strong>"))
     el))
 
 (defn wrap-with-title [div title]
   (let [container (create-div)
         title-div (create-title-div title)]
+    (.add (.-classList container) "dds-content")
     (.appendChild container title-div)
     (.appendChild container div)
     container))
