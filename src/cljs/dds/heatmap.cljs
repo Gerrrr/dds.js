@@ -12,7 +12,7 @@
 
 (s/defn ^:always-validate render-loop
   [container :- js/Element
-   values :- [[s/Num]]
+   values :- [[(s/maybe s/Num)]]
    row-names :- [s/Str]
    col-names :- [s/Str]
    color-zeroes :- [s/Num]]
@@ -114,7 +114,7 @@
 (s/defn ^:always-validate
   render :- js/Element
   [title :- s/Str
-   values :- [[s/Num]]
+   values :- [[(s/maybe s/Num)]]
    row-names :- [s/Str]
    col-names :- [s/Str]
    color-zeroes :- [s/Num]]
