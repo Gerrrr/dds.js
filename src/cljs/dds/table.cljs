@@ -4,13 +4,13 @@
    [plumbing.core :as p]
    [dds.utils :as du]))
 
-
-
 (def numeric-types #{"integer" "double" "float" "byte" "short" "long" "decimal"
-                     "date" "timestamp"})
+                     "date" "timestamp" "binary"})
+(def container-types {"map" ["keyType" "valueType"]
+                      "struct" ["fields"]
+                      "array" ["elementType"]})
+
 (def valid-types (into #{"string" "boolean"} numeric-types))
-
-
 
 (defn- dimension-name [type-map]
   (str
@@ -106,7 +106,7 @@
   [title :- s/Str
    schema :- [{(s/required-key :name) s/Str
                (s/required-key :nullable) s/Bool
-               (s/required-key :type) (apply s/enum valid-types)}]
+               (s/required-key :type) s/Any}]
    content :- [[s/Any]]]
   (let [table (du/create-div)
         grid (du/create-div)
