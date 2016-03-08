@@ -35,6 +35,7 @@
                 :whitespace false
                 :optimizations :advanced
                 :externs ["resources/externs/d3.js"
+                          "resources/externs/d3tip.js"
                           "resources/externs/c3.js"
                           "resources/externs/slick.grid.externs.js"]}
      :notify-command ["scripts/build.sh"]}]}

@@ -2,13 +2,30 @@
   (:require
    [schema.core :as s :include-macros true]
    [plumbing.core :as p]
-   [dds.utils :as du]))
+   [dds.utils :as du])
+  (:import
+   [goog.string format]))
 
 (def margins
   {:left-margin 50
-   :bottom-margin 20
+   :bottom-margin 60
    :right-margin 10
    :top-margin 10})
+
+(def tooltip-template
+"<div class=\"c3-tooltip-container\">
+  <table class=\"c3-tooltip\">
+    <tbody>
+      <tr>
+        <th colspan=\"2\">%s - %s</th>
+      </tr>
+      <tr class=\"c3-tooltip-name-x\">
+        <td class=\"name\">Area</td>
+        <td class=\"value\">%.2f</td>
+     </tr>
+    </tbody>
+  </table>
+</div>")
 
 (s/defn ^:always-validate render-loop
   [container :- js/Element
@@ -41,7 +58,7 @@
                      :as m}]
                  (let [scaled-start (x-domain start)]
                    (assoc m
-                          :start scaled-start
+                          :scaledStart scaled-start
                           :width (- (x-domain end) scaled-start)
                           :height (/ y (- end start)))))
                bin-maps)
@@ -56,19 +73,31 @@
                (fn [{:keys [height]
                      :as bin}]
                  (assoc bin
-                        :height (y-domain height))))
-              (clj->js))]
+                        :scaledHeight (y-domain height))))
+              (clj->js))
+        tip (->
+             (.tip js/d3)
+             (.attr "class" "d3-tip")
+             (.offset #js [-10 0])
+             (.html (fn [bin]
+                      (format tooltip-template
+                              (.-start bin)
+                              (.-end bin)
+                              (* (- (.-end bin) (.-start bin))
+                                 (.-height bin))))))]
+    (.call svg tip)
      (->
       (.selectAll svg ".bin")
-      (.data  bins)
+      (.data bins)
       (.enter)
       (.append "rect")
-      (.attr "fill" "steelblue")
+      (.on "mouseover" (.-show tip))
+      (.on "mouseout" (.-hide tip))
       (.attr "class" "bin")
-      (.attr "x" #(.-start %))
-      (.attr "width" #(dec (.-width %)))
-      (.attr "y" #(.-height %))
-      (.attr "height" #(- height (.-height %))))
+      (.attr "x" #(aget % "scaledStart"))
+      (.attr "width" #(dec (aget % "width")))
+      (.attr "y" #(aget % "scaledHeight"))
+      (.attr "height" #(- height (aget % "scaledHeight"))))
      (->
       (.append svg "g")
       (.attr "class" "x axis")
