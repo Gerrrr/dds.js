@@ -98,6 +98,7 @@
      (.data points)
      (.enter)
      (.append "svg:circle")
+     (.attr "class" "scatter-circle")
      (.attr "cx" (partial axis-value jitter? x-numeric? xf #(.-x %)))
      (.attr "cy" (partial axis-value jitter? y-numeric? yf #(.-y %)))
      (.attr "r" 3))))
