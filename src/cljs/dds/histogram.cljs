@@ -105,7 +105,7 @@
                       :start start
                       :end end})
                    frequencies))
-        render-fn #(render-loop chart bin-maps)]
-    (du/observe-inserted! chart render-fn)
-    (du/on-window-resize! render-fn)
-    (du/wrap-with-title chart title)))
+        render-fn #(render-loop chart bin-maps)
+        container (du/wrap-with-title chart title)]
+    (du/observe-inserted! container render-fn)
+    container))

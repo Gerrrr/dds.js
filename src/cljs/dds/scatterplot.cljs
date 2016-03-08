@@ -126,7 +126,7 @@
              (categorical-axis-f ys))
         chart (du/create-div)
         render-fn #(render-loop chart js-points x-numeric? y-numeric?
-                                jitter? xf yf)]
-    (du/observe-inserted! chart render-fn)
-    (du/on-window-resize! render-fn)
-    (du/wrap-with-title chart title)))
+                                jitter? xf yf)
+        container (du/wrap-with-title chart title)]
+    (du/observe-inserted! container render-fn)
+    container))

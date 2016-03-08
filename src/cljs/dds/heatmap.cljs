@@ -123,7 +123,7 @@
   (let [container (du/create-div)
         chart (du/create-div)
         render-fn #(render-loop chart values row-names
-                                col-names color-zeroes)]
-    (du/observe-inserted! chart render-fn)
-    (du/on-window-resize! render-fn)
-    (du/wrap-with-title chart title)))
+                                col-names color-zeroes)
+        container (du/wrap-with-title chart title)]
+    (du/observe-inserted! container render-fn)
+    container))

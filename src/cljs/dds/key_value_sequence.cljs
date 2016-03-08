@@ -36,7 +36,7 @@
    kvs :- [{(s/required-key :key) s/Any
             (s/required-key :val) s/Any}]]
   (let [chart (du/create-div)
-        render-fn #(render-loop chart kvs)]
-    (du/observe-inserted! chart render-fn)
-    (du/on-window-resize! render-fn)
-    (du/wrap-with-title chart title)))
+        render-fn #(render-loop chart kvs)
+        container (du/wrap-with-title chart title)]
+    (du/observe-inserted! container render-fn)
+    container))

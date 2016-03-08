@@ -108,14 +108,14 @@
                (s/required-key :nullable) s/Bool
                (s/required-key :type) (apply s/enum valid-types)}]
    content :- [[s/Any]]]
-  (let [container (du/create-div)
+  (let [table (du/create-div)
         grid (du/create-div)
         pager (du/create-div)
-        render-fn #(render-loop pager grid schema content)]
+        render-fn #(render-loop pager grid schema content)
+        container (du/wrap-with-title table title)]
     (.add (.-classList grid) "grid")
     (.add (.-classList pager) "pager")
-    (.appendChild container pager)
-    (.appendChild container grid)
+    (.appendChild table pager)
+    (.appendChild table grid)
     (du/observe-inserted! container render-fn)
-    (du/on-window-resize! render-fn)
-    (du/wrap-with-title container title)))
+    container))

@@ -153,7 +153,7 @@
         chart (du/create-div)
         render-fn #(render-loop chart force nodes links
                                 show-node-labels? show-edge-labels?
-                                show-directions?)]
-    (du/observe-inserted! chart render-fn)
-    (du/on-window-resize! render-fn)
-    (du/wrap-with-title chart title)))
+                                show-directions?)
+        container (du/wrap-with-title chart title)]
+    (du/observe-inserted! container render-fn)
+    container))
