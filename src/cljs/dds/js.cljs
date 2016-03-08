@@ -1,6 +1,7 @@
 (ns dds.js
   (:require
-   [dds.core :as dds]))
+   [dds.core :as dds]
+   [dds.graph :as dg]))
 
 (defn- transform-args [args]
   (map #(js->clj % :keywordize-keys true) args))
@@ -25,6 +26,10 @@
 
 (defn ^:export graph [& args]
   (apply dds/graph (transform-args args)))
+
+(def ^:export graphUtils #js {"styleEdgeLines" dg/style-edge-lines
+                              "styleEdgeLabels" dg/style-edge-labels
+                              "styleNodeLabels" dg/style-node-labels})
 
 (defn ^:export table [& args]
   (apply dds/table (transform-args args)))

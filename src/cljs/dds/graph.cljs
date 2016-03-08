@@ -10,6 +10,27 @@
    :right-margin 0
    :top-margin 0})
 
+
+(defn style-edge-lines [edge-lines show-directions?]
+  (.attr edge-lines "marker-end" (if show-directions?
+                                   "url(#triangle)"
+                                   "")))
+
+(defn style-edge-labels [edge-labels show-edge-labels?]
+  (->
+   (.attr edge-labels "fill" "black")
+   (.attr "text-anchor" "middle")
+   (.style "visibility" (if show-edge-labels?
+                          "visible"
+                          "hidden"))))
+
+(defn style-node-labels [node-labels show-node-labels?]
+  (->
+   (.attr node-labels "fill" "black")
+   (.style "visibility" (if show-node-labels?
+                          "visible"
+                          "hidden"))))
+
 (s/defn ^:always-validate render-loop
   [container :- js/Element
    force :- js/Object
@@ -19,7 +40,7 @@
                (s/required-key :label) s/Str}]
    show-node-labels? :- s/Bool
    show-edge-labels? :- s/Bool
-   show-directions?] :- s/Bool
+   show-directions? :- s/Bool]
    (set! (.-innerHTML container) "")
    (let [links (clj->js links)
          nodes (clj->js nodes)
@@ -57,21 +78,15 @@
                 (.selectAll svg ".link")
                 (.data links)
                 (.enter))
-         link-lines (->
+         edge-lines (->
                      (.append links "line")
                      (.attr "class" "link")
-                     (.attr "marker-end" (if show-directions?
-                                           "url(#triangle)"
-                                           "")))
-         link-labels (->
+                     (style-edge-lines show-directions?))
+         edge-labels (->
                       (.append links "text")
                       (.text #(.-label %))
-                      (.attr "fill" "black")
                       (.attr "class" "edgeLabel")
-                      (.attr "text-anchor" "middle")
-                      (.style "visibility" (if show-edge-labels?
-                                             "visible"
-                                             "hidden")))
+                      (style-edge-labels show-edge-labels?))
          nodes (->
                 (.selectAll svg ".node")
                 (.data nodes)
@@ -83,11 +98,8 @@
          node-labels (->
                       (.append nodes "text")
                       (.text #(.-label %))
-                      (.attr "fill" "black")
                       (.attr "class" "nodeLabel")
-                      (.style "visibility" (if show-node-labels?
-                                             "visible"
-                                             "hidden")))]
+                      (style-node-labels show-node-labels?))]
      (.on force
           "tick"
           (fn []
@@ -102,7 +114,7 @@
              (.attr "y" #(- (.-y %) 4)))
 
             (->
-             link-labels
+             edge-labels
              (.attr "x" #(if (> (aget % "target" "x")
                                 (aget % "source" "x"))
                            (+ (aget % "source" "x")
@@ -125,7 +137,7 @@
                                  2)))))
 
             (->
-             link-lines
+             edge-lines
              (.attr "x1" #(aget % "source" "x"))
              (.attr "x2" #(aget % "target" "x"))
              (.attr "y1" #(aget % "source" "y"))
