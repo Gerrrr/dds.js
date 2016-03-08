@@ -6,7 +6,7 @@
 
 (def margins
   {:left-margin 50
-   :bottom-margin 20
+   :bottom-margin 60
    :right-margin 10
    :top-margin 10})
 
